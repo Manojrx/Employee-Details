@@ -1,0 +1,105 @@
+<div class="flex flex-col h-full w-full">
+    <div class="flex flex-col basis-[100%] p-5 gap-3">
+        <form class="flex flex-col h-full w-full" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+            <div class="flex flex-col basis-[90%] p-5 gap-3">
+
+                <!-- Employee Name -->
+                <div class="relative w-full h-[40px]">
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2">
+                        <img src="/assets/icons/person.svg" alt="Person Icon" class="w-6 h-6">
+                    </div>
+                    <input type="text" placeholder="Employee Name" formControlName="employeeName"
+                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full outline-none text-sm text-gray-700 h-full" />
+                </div>
+
+
+                <!-- Role Selection -->
+                <div class="relative w-full h-[40px]">
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <img src="/assets/icons/suitcase.svg" alt="Suitcase Icon" class="w-6 h-6">
+                    </div>
+
+                    <!-- Trigger Button -->
+                    <div tabindex="0"
+                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full outline-none text-sm text-gray-700 bg-white cursor-pointer h-full flex items-center"
+                        (click)="toggleDropdown()" formControlName="employeeRole">
+                        {{ selectedRole || 'Select role' }}
+                    </div>
+
+                    <!-- Overlay for Darkened Background -->
+                    <div *ngIf="showDropdown" class="fixed inset-0 bg-black bg-opacity-50 z-40"
+                        (click)="toggleDropdown()"></div>
+
+                    <!-- Dropdown List -->
+                    <div *ngIf="showDropdown" tabindex="0"
+                        class="fixed bottom-0 left-0 w-full bg-white border-t border-x border-gray-300 shadow-lg z-50 rounded-t-2xl outline-none">
+                        <div *ngFor="let role of roles; let last = last" (click)="selectRole(role)"
+                            [ngClass]="{ 'bg-blue-100 text-black': role === selectedRole }"
+                            class="p-3 cursor-pointer hover:bg-blue-200 text-center relative focus:bg-blue-200 focus:text-black">
+                            {{ role }}
+                            <!-- Divider Line (except last item) -->
+                            <div *ngIf="!last" class="absolute bottom-0 left-0 w-full border-t border-gray-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Date Range -->
+                <div class="flex flex-row rounded-md h-[40px] gap-3">
+
+                    <!-- First Date Picker -->
+                    <label (click)="openDatePicker('first')"
+                        class="h-full basis-[45%] border rounded-md border-gray-300 relative flex items-center cursor-pointer">
+                        <img src="/assets/icons/calendar.svg" alt="calendar Icon"
+                            class="absolute left-3 w-6 h-6 cursor-pointer" />
+
+                        <span class="pl-12 text-sm text-gray-700" *ngIf="!employeeForm.value.joiningDate">
+                            Select Date
+                        </span>
+                        <span class="pl-12 text-sm text-gray-700" *ngIf="employeeForm.value.joiningDate">
+                            {{ formatDate(employeeForm.value.joiningDate) }}
+                        </span>
+
+                        <input #dateInput type="date" formControlName="joiningDate" [attr.max]="today"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    </label>
+
+                    <div class="h-full basis-[10%] flex justify-center items-center">
+                        <img src="/assets/icons/arrowRight.svg" alt="arrow Icon" class="w-6 h-6">
+                    </div>
+
+                    <!-- Second Date Picker -->
+                    <label (click)="openDatePicker('second')"
+                        class="h-full basis-[45%] border rounded-md border-gray-300 relative flex items-center cursor-pointer">
+                        <img src="/assets/icons/calendar.svg" alt="calendar Icon"
+                            class="absolute left-3 w-6 h-6 cursor-pointer" />
+
+                        <span class="pl-12 text-sm text-gray-700" *ngIf="!employeeForm.value.endDate">
+                            Select Date
+                        </span>
+                        <span class="pl-12 text-sm text-gray-700" *ngIf="employeeForm.value.endDate">
+                            {{ formatDate(employeeForm.value.endDate) }}
+                        </span>
+
+                        <input #dateInputSecond type="date" formControlName="endDate" [attr.max]="today"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    </label>
+                </div>
+            </div>
+
+            <!-- Button Section -->
+            <div class="flex border-t-2 border-[#F2F2F2] justify-end items-end basis-[10%]">
+                <div class="flex flex-row gap-2 mr-3">
+                    <button type="button"
+                        class="bg-[#3b82f62e] text-[#1DA1F2] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 px-4 py-2 rounded-md flex items-center gap-2">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="!employeeForm.valid"
+                        class="bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 px-4 py-2 rounded-md flex items-center gap-2">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
